@@ -51,8 +51,8 @@ setMethod(
   }
 )
 #' @export
-association_plot <- function(dataframe, ...) {
-  pvals <- generate_pvalues(dataframe, dataframe)
+association_plot <- function(dataframe, progress_bar = TRUE, ...) {
+  pvals <- generate_pvalues(dataframe, dataframe, progress_bar = progress_bar,)
   diag(pvals) <- NA
   pvalue_heatmap(pvals, ...)
 }
