@@ -50,17 +50,7 @@ setMethod(
 )
 
 association_plot <- function(dataframe) {
-  pvals <- sapply(
-    1:ncol(dataframe),
-    function(i) {
-      sapply(1:ncol(dataframe),
-        function(j) {
-          associate(dataframe[[i]], dataframe[[j]])
-        }
-      )
-    }
-  )
-  dimnames(pvals) <- list(colnames(dataframe), colnames(dataframe))
+  pvals <- generate_pvalues(dataframe, dataframe)
   diag(pvals) <- NA
   pvalue_heatmap(pvals)
 }

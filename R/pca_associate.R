@@ -3,8 +3,27 @@ pca_associate <- function(a, b, ...) standardGeneric("pca_associate")
 setMethod(
   "pca_associate",
   signature(a = "data.frame", b = "matrix"),
-  function(a, b, ...) {
-    pca_associate(a, prcomp(b), ...)
+  function(a, b, 
+      method = c("irlba", "prcomp"), 
+      npcs = min(ncol(a) - 1, nrow(a) - 1, 50), 
+      scale = TRUE, 
+      max_iterations = 100000, 
+      ...) {
+    
+    method <- match.arg(method)
+    ## -1 because irlba has to be truncated
+    pcs <- switch(method,
+      "irlba" = {
+        prcomp_irlba(b, n = npcs, 
+          scale. = scale,
+          maxit = max_iterations)
+      },
+      "prcomp" = {
+        prcomp(b,
+          scale. = scale)
+      }
+    )
+    pca_associate(a, pcs, npcs = npcs, ...)
   }
 )
 
@@ -35,25 +54,39 @@ setMethod(
 
 setMethod(
   "pca_associate",
-  signature(a = "data.frame", b = "prcomp"),
+  signature(a = "data.frame", b = "irlba_prcomp"),
   function(a, b, ...) {
     pcs <- b$x
-    pvals <- sapply(
-      seq_len(ncol(a)), 
-      function(i) {
-        sapply(seq_len(ncol(pcs)),
-          function(j) {
-            associate(a[[i]], pcs[, j])
-          }
-        )
-      }
-    )
-    colnames(pvals) <- colnames(a)
-    rownames(pvals) <- colnames(pcs)
+    pvals <- generate_pvalues(a, pcs)
     pvalue_heatmap(pvals)
   }
 )
 
+
+setMethod(
+  "pca_associate",
+  signature(a = "data.frame", b = "prcomp"),
+  function(a, b, npcs, ...) {
+    pcs <- b$x[, seq_len(npcs)]
+    pvals <- generate_pvalues(a, pcs)
+    pvalue_heatmap(pvals)
+  }
+)
+
+generate_pvalues <- function(a, b) {
+  pvals <- sapply(
+    seq_len(ncol(a)), 
+    function(i) {
+      sapply(seq_len(ncol(b)),
+        function(j) {
+          associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
+        }
+      )
+    }
+  )
+  dimnames(pvals) <- list(colnames(b), colnames(a))
+  pvals
+}
 
 pvalue_heatmap <- function(pvalues) {
   stopifnot(inherits(pvalues, "matrix"))
