@@ -1,13 +1,12 @@
 Package: nalar
-Title: What the Package Does (One Line, Title Case)
+Title: Various things I want it to do.
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Alan",
+           family = "O'Callaghan",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "alan.ocallaghan@outlook.com")
+Description: I will add this whenever it's actually somewhat complete.
 Depends: R (>= 3.5)
 Imports: 
     reshape2,
@@ -17,7 +16,8 @@ License: What license it uses
 Encoding: UTF-8
 LazyData: true
 Suggests: 
-    testthat
+    testthat,
+    covr
 URL: https://github.com/Alanocallaghan/nalar
 BugReports: https://github.com/Alanocallaghan/nalar/issues
 RoxygenNote: 6.1.1
