@@ -1,7 +1,8 @@
-pca_associate <- function(a, b, ...) standardGeneric("pca_associate")
-
+#' @export
+pca_association_plot <- function(a, b, ...) standardGeneric("pca_association_plot")
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "data.frame", b = "matrix"),
   function(a, b, 
       method = c("irlba", "prcomp"), 
@@ -23,37 +24,36 @@ setMethod(
           scale. = scale)
       }
     )
-    pca_associate(a, pcs, npcs = npcs, ...)
+    pca_association_plot(a, pcs, npcs = npcs, ...)
   }
 )
-
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "matrix", b = "ANY"),
   function(a, b, ...) {
-    pca_associate(as.data.frame(a), b, ...)
+    pca_association_plot(as.data.frame(a), b, ...)
   }
 )
-
-
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "data.frame", b = "missing"),
   function(a, b, ...) {
-    pca_associate(a, a, ...)
+    pca_association_plot(a, a, ...)
   }
 )
-
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "ANY", b = "data.frame"),
   function(a, b, ...) {
-    pca_associate(a, as.matrix(b), ...)
+    pca_association_plot(a, as.matrix(b), ...)
   }
 )
-
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "data.frame", b = "irlba_prcomp"),
   function(a, b, ...) {
     pcs <- b$x
@@ -61,15 +61,14 @@ setMethod(
     pvalue_heatmap(pvals)
   }
 )
-
-
+#' @export
 setMethod(
-  "pca_associate",
+  "pca_association_plot",
   signature(a = "data.frame", b = "prcomp"),
   function(a, b, npcs, ...) {
     pcs <- b$x[, seq_len(npcs)]
     pvals <- generate_pvalues(a, pcs)
-    pvalue_heatmap(pvals)
+    pvalue_heatmap(pvals, ...)
   }
 )
 
@@ -88,7 +87,7 @@ generate_pvalues <- function(a, b) {
   pvals
 }
 
-pvalue_heatmap <- function(pvalues) {
+pvalue_heatmap <- function(pvalues, ...) {
   stopifnot(inherits(pvalues, "matrix"))
 
   mdf <- reshape2::melt(pvalues)

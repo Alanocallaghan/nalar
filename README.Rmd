@@ -1,5 +1,5 @@
 ---
-output: github_document
+output: md_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -23,4 +23,13 @@ You can install the released version of nalar from [github](https://www.github.c
 
 ``` r
 install_github("Alanocallaghan/nalar")
+```
+
+```{r association}
+library("nalar")
+association_plot(mtcars)
+```
+
+```{r pca association}
+pca_association_plot(mtcars, method = "prcomp")
 ```

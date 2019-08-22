@@ -1,6 +1,8 @@
 ## S4 method to associate between all types of variables
+#' @export
 associate <- function(a, b, ...) standardGeneric("associate")
 
+#' @export
 setMethod(
   "associate", 
   signature(a = "numeric", b = "numeric"),
@@ -8,7 +10,7 @@ setMethod(
     cor.test(a, b, method = method, exact = FALSE)[["p.value"]]
   }
 )
-
+#' @export
 setMethod(
   "associate", 
   signature(a = "character", b = "ANY"),
@@ -16,7 +18,7 @@ setMethod(
     associate(factor(a), b)
   }
 )
-
+#' @export
 setMethod(
   "associate", 
   signature(a = "ANY", b = "character"),
@@ -24,7 +26,7 @@ setMethod(
     associate(a, factor(b))
   }
 )
-
+#' @export
 setMethod(
   "associate", 
   signature(a = "ANY", b = "factor"),
@@ -32,7 +34,7 @@ setMethod(
     associate(b, a)
   }
 )
-
+#' @export
 setMethod(
   "associate", 
   signature(a = "factor", b = "numeric"),
@@ -40,7 +42,7 @@ setMethod(
     anova(lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
-
+#' @export
 setMethod(
   "associate", 
   signature(a = "logical", b = "numeric"),
@@ -48,9 +50,9 @@ setMethod(
     associate(factor(a, b))
   }
 )
-
-association_plot <- function(dataframe) {
+#' @export
+association_plot <- function(dataframe, ...) {
   pvals <- generate_pvalues(dataframe, dataframe)
   diag(pvals) <- NA
-  pvalue_heatmap(pvals)
+  pvalue_heatmap(pvals, ...)
 }
