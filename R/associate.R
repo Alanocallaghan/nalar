@@ -45,6 +45,15 @@ setMethod(
 #' @export
 setMethod(
   "associate", 
+  signature(a = "factor", b = "numeric"),
+  function(a, b) {
+    chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
+  }
+)
+
+#' @export
+setMethod(
+  "associate", 
   signature(a = "logical", b = "numeric"),
   function(a, b) {
     associate(factor(a, b))
@@ -52,7 +61,29 @@ setMethod(
 )
 #' @export
 association_plot <- function(dataframe, progress_bar = TRUE, ...) {
-  pvals <- generate_pvalues(dataframe, dataframe, progress_bar = progress_bar,)
+  pvals <- generate_pvalues(dataframe, dataframe, progress_bar = progress_bar)
   diag(pvals) <- NA
   pvalue_heatmap(pvals, ...)
+}
+
+generate_pvalues <- function(a, b, progress_bar = TRUE) {
+  if (progress_bar) {
+    pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
+  }
+  pvals <- sapply(
+    seq_len(ncol(a)), 
+    function(i) {
+      sapply(seq_len(ncol(b)),
+        function(j) {
+          cat(i, j, "...\n")
+          if (progress_bar) {
+            pb$tick()
+          }
+          associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
+        }
+      )
+    }
+  )
+  dimnames(pvals) <- list(colnames(b), colnames(a))
+  pvals
 }

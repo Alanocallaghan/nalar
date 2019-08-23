@@ -55,8 +55,8 @@ setMethod(
 setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "irlba_prcomp"),
-  function(a, b, progress_bar = TRUE, ...) {
-    pcs <- b$x
+  function(a, b, progress_bar = TRUE, npcs = ncol(b$x), ...) {
+    pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- generate_pvalues(a, pcs, progress_bar = progress_bar)
     pvalue_heatmap(pvals)
   }
@@ -66,32 +66,12 @@ setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "prcomp"),
   function(a, b, npcs, progress_bar = TRUE, ...) {
-    pcs <- b$x[, seq_len(npcs)]
+    pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- generate_pvalues(a, pcs, progress_bar = progress_bar)
     pvalue_heatmap(pvals, ...)
   }
 )
 
-generate_pvalues <- function(a, b, progress_bar = TRUE) {
-  if (progress_bar) {
-    pb <- progress_bar$new(total = ncol(a) * ncol(b))
-  }
-  pvals <- sapply(
-    seq_len(ncol(a)), 
-    function(i) {
-      sapply(seq_len(ncol(b)),
-        function(j) {
-          if (progress_bar) {
-            pb$tick()
-          }
-          associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
-        }
-      )
-    }
-  )
-  dimnames(pvals) <- list(colnames(b), colnames(a))
-  pvals
-}
 
 pvalue_heatmap <- function(pvalues, ...) {
   stopifnot(inherits(pvalues, "matrix"))

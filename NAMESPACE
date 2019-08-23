@@ -2,6 +2,7 @@
 
 export(associate)
 export(association_plot)
+export(compare_columns)
 export(pca_association_plot)
 exportMethods(associate)
 exportMethods(pca_association_plot)
