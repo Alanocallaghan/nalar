@@ -57,7 +57,7 @@ setMethod(
   signature(a = "data.frame", b = "irlba_prcomp"),
   function(a, b, progress_bar = TRUE, npcs = ncol(b$x), ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
-    pvals <- generate_pvalues(a, pcs, progress_bar = progress_bar)
+    pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
     pvalue_heatmap(pvals)
   }
 )
@@ -67,7 +67,7 @@ setMethod(
   signature(a = "data.frame", b = "prcomp"),
   function(a, b, npcs, progress_bar = TRUE, ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
-    pvals <- generate_pvalues(a, pcs, progress_bar = progress_bar)
+    pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
     pvalue_heatmap(pvals, ...)
   }
 )

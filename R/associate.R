@@ -60,30 +60,62 @@ setMethod(
   }
 )
 #' @export
-association_plot <- function(dataframe, progress_bar = TRUE, ...) {
-  pvals <- generate_pvalues(dataframe, dataframe, progress_bar = progress_bar)
+association_plot <- function(dataframe, progress_bar = FALSE, ...) {
+  pvals <- associate_dfs(dataframe, dataframe, progress_bar = progress_bar)
   diag(pvals) <- NA
   pvalue_heatmap(pvals, ...)
 }
 
-generate_pvalues <- function(a, b, progress_bar = TRUE) {
+associate_dfs <- function(
+    a,
+    b,
+    progress_bar = FALSE, 
+    symmetric = identical(a, b)
+    ) {
+
   if (progress_bar) {
     pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
   }
-  pvals <- sapply(
-    seq_len(ncol(a)), 
-    function(i) {
-      sapply(seq_len(ncol(b)),
-        function(j) {
-          cat(i, j, "...\n")
-          if (progress_bar) {
-            pb$tick()
-          }
-          associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
+  if (symmetric) {
+    combs <- combn(seq_len(ncol(a)), 2)
+    pvals <- sapply(seq_len(ncol(combs)), 
+      function(n) {
+        i <- combs[1, n]
+        j <- combs[2, n]
+        if (progress_bar) {
+          pb$tick()
         }
-      )
-    }
-  )
-  dimnames(pvals) <- list(colnames(b), colnames(a))
-  pvals
+        associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
+      }
+    )
+    out <- matrix(NA, 
+      ncol = ncol(a),
+      nrow = ncol(b),
+      dimnames = list(colnames(b), colnames(a))
+    )
+    out[lower.tri(out)] <- pvals
+    out <- reflect_matrix(out)
+  } else {
+    out <- sapply(
+      seq_len(ncol(a)), 
+      function(i) {
+        sapply(seq_len(ncol(b)),
+          function(j) {
+            if (progress_bar) {
+              pb$tick()
+            }
+            associate(a[, i, drop = TRUE], b[, j, drop = TRUE])
+          }
+        )
+      }
+    )
+    dimnames(out) <- list(colnames(b), colnames(a))
+  }
+  out
+}
+
+
+reflect_matrix <- function(mat) {
+  mat[upper.tri(mat)] <- t(mat)[upper.tri(mat)] 
+  mat
 }
