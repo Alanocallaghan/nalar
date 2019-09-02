@@ -14,6 +14,10 @@ You can install the released version of nalar from
 
     install_github("Alanocallaghan/nalar")
 
+    load_all()
+    #> Loading nalar
+    #> Creating a generic function from function 'associate' in package 'nalar'
+    #> Creating a generic function from function 'pca_association_plot' in package 'nalar'
     library("nalar")
     association_plot(mtcars)
 
@@ -21,4 +25,4 @@ You can install the released version of nalar from
 
     pca_association_plot(mtcars, method = "prcomp")
 
-<img src="man/figures/README-pca association-1.png" width="100%" />
+<img src="man/figures/README-pca_association-1.png" width="100%" />

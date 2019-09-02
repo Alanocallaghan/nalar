@@ -1,5 +1,5 @@
 remove_collinear <- function(x) {
-  combs <- combn(seq_len(ncol(x)), 2)
+  combs <- utils::combn(seq_len(ncol(x)), 2)
   collinear <- sapply(
     seq_len(ncol(combs)),
     function(i) {
@@ -20,7 +20,7 @@ remove_collinear <- function(x) {
 compare_columns <- function(a, b) {
   a <- to_numeric(a)
   b <- to_numeric(b)
-  length(na.omit(unique(a - b))) == 1
+  length(stats::na.omit(unique(a - b))) == 1
 }
 
 to_numeric <- function(x) {

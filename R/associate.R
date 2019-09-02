@@ -7,7 +7,7 @@ setMethod(
   "associate", 
   signature(a = "numeric", b = "numeric"),
   function(a, b, method = "spearman") {
-    cor.test(a, b, method = method, exact = FALSE)[["p.value"]]
+    stats::cor.test(a, b, method = method, exact = FALSE)[["p.value"]]
   }
 )
 #' @export
@@ -39,7 +39,7 @@ setMethod(
   "associate", 
   signature(a = "factor", b = "numeric"),
   function(a, b) {
-    anova(lm(b ~ a))[["Pr(>F)"]][[1]]
+    stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
 #' @export
@@ -47,7 +47,7 @@ setMethod(
   "associate", 
   signature(a = "factor", b = "numeric"),
   function(a, b) {
-    chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
+    stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
   }
 )
 
@@ -77,7 +77,7 @@ associate_dfs <- function(
     pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
   }
   if (symmetric) {
-    combs <- combn(seq_len(ncol(a)), 2)
+    combs <- utils::combn(seq_len(ncol(a)), 2)
     pvals <- sapply(seq_len(ncol(combs)), 
       function(n) {
         i <- combs[1, n]

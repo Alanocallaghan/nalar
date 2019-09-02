@@ -1,5 +1,5 @@
 Package: nalar
-Title: Various things I want it to do.
+Title: Various things I want it to do
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Alan",
@@ -11,8 +11,13 @@ Depends: R (>= 3.5)
 Imports: 
     reshape2,
     ggplot2,
-    viridis
-License: What license it uses
+    viridis,
+    progress,
+    methods,
+    utils,
+    irlba,
+    stats
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: 

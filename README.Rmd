@@ -26,10 +26,11 @@ install_github("Alanocallaghan/nalar")
 ```
 
 ```{r association}
+load_all()
 library("nalar")
 association_plot(mtcars)
 ```
 
-```{r pca association}
+```{r pca_association}
 pca_association_plot(mtcars, method = "prcomp")
 ```
