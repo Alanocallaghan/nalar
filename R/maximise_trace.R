@@ -6,6 +6,7 @@
 #' 
 #' @param mat Input matrix
 #' @return A matrix with rows permuted such that tr(mat) is maximised.
+#' @export
 maximise_trace <- function(mat) {
   diag <- diag(1, nrow(mat)) # this choice of B maximizes the trace of permuted A
   permute_matrix(mat, diag)

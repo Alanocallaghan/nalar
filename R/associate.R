@@ -59,11 +59,28 @@ setMethod(
     associate(factor(a, b))
   }
 )
+
 #' @export
-association_plot <- function(dataframe, progress_bar = FALSE, ...) {
-  pvals <- associate_dfs(dataframe, dataframe, progress_bar = progress_bar)
-  diag(pvals) <- NA
+association_plot <- function(a, b, progress_bar = FALSE, ...) {
+  pvals <- associate_dfs(a, b, progress_bar = progress_bar)
   pvalue_heatmap(pvals, ...)
+}
+
+
+#' @export
+association_table <- function(a, b, progress_bar = FALSE) {
+  pvals <- associate_dfs(a, b, progress_bar = progress_bar)
+  mdf <- reshape2::melt(pvals)
+}
+
+associations <- function(a, b, associate_dfs) {
+  pvals <- associate_dfs(a, b, progress_bar = progress_bar)
+  structure(
+    pvalues = pvals,
+    a = a,
+    b = b,
+    class = "associations"
+  )
 }
 
 associate_dfs <- function(
@@ -119,3 +136,4 @@ reflect_matrix <- function(mat) {
   mat[upper.tri(mat)] <- t(mat)[upper.tri(mat)] 
   mat
 }
+

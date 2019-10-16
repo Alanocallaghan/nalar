@@ -15,13 +15,15 @@ setMethod(
     ## -1 because irlba has to be truncated
     pcs <- switch(method,
       "irlba" = {
-        prcomp_irlba(b, n = npcs, 
+        prcomp_irlba(b, 
+          n = npcs, 
           scale. = scale,
           maxit = max_iterations)
       },
       "prcomp" = {
         prcomp(b,
-          scale. = scale)
+          scale. = scale
+        )
       }
     )
     pca_association_plot(a, pcs, npcs = npcs, ...)
