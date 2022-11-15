@@ -18,7 +18,6 @@ permute_matrix <- function(A, B) {
   # finds the permutation P of A such that ||PA - B|| is minimum in Frobenius norm
   # Uses the linear-sum assignment problem (LSAP) solver in the "clue" package
 
-  require("clue")  # need this package to solve the LSAP
   # Returns P%*%A and the permutation vector `pvec' such that
   # A[pvec, ] is the permutation of A closest to B
   n <- nrow(A)
