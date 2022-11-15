@@ -4,47 +4,52 @@ associate <- function(a, b, ...) standardGeneric("associate")
 
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "numeric", b = "numeric"),
   function(a, b, method = "spearman") {
     stats::cor.test(a, b, method = method, exact = FALSE)[["p.value"]]
   }
 )
+
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "character", b = "ANY"),
   function(a, b) {
     associate(factor(a), b)
   }
 )
+
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "ANY", b = "character"),
   function(a, b) {
     associate(a, factor(b))
   }
 )
+
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "ANY", b = "factor"),
   function(a, b) {
     associate(b, a)
   }
 )
+
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "factor", b = "numeric"),
   function(a, b) {
     stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
+
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "factor", b = "numeric"),
   function(a, b) {
     stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
@@ -53,7 +58,7 @@ setMethod(
 
 #' @export
 setMethod(
-  "associate", 
+  "associate",
   signature(a = "logical", b = "numeric"),
   function(a, b) {
     associate(factor(a, b))
@@ -88,8 +93,11 @@ associate_dfs <- function(
     b,
     progress_bar = FALSE, 
     symmetric = identical(a, b)
-    ) {
+  ) {
 
+  if (missing(b)) {
+    b <- a
+  }
   if (progress_bar) {
     pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
   }
@@ -131,9 +139,7 @@ associate_dfs <- function(
   out
 }
 
-
 reflect_matrix <- function(mat) {
   mat[upper.tri(mat)] <- t(mat)[upper.tri(mat)] 
   mat
 }
-

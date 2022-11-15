@@ -16,6 +16,7 @@ Imports:
     methods,
     utils,
     irlba,
+    cowplot,
     stats
 License: GPL-3
 Encoding: UTF-8
@@ -25,4 +26,4 @@ Suggests:
     covr
 URL: https://github.com/Alanocallaghan/nalar
 BugReports: https://github.com/Alanocallaghan/nalar/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.2
