@@ -33,7 +33,7 @@ setMethod(
 #' @export
 setMethod(
   "pca_association_plot",
-  signature(a = "matrix", b = "ANY"),
+  signature(a = "ANY", b = "ANY"),
   function(a, b, ...) {
     pca_association_plot(as.data.frame(a), b, ...)
   }
