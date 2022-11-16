@@ -16,11 +16,18 @@ association_plot <- function(a, b, progress_bar = FALSE, ...) {
 
 #' @rdname association-summaries
 #' @export
-association_table <- function(a, b, progress_bar = FALSE) {
+association_table <- function(a, b = a, progress_bar = FALSE) {
   pvals <- associate_dfs(a, b, progress_bar = progress_bar)
+  if (missing(b)) {
+    pvals[lower.tri(pvals)] <- NA
+  }
   mdf <- reshape2::melt(pvals)
+  colnames(mdf) <- c("Variable 1", "Variable 2", "p-value")
+  mdf <- mdf[!is.na(mdf$"p-value"), ]
+  mdf
 }
 
+## todo: plot and table methods
 associations <- function(a, b, associate_dfs) {
   pvals <- associate_dfs(a, b, progress_bar = progress_bar)
   structure(
@@ -33,14 +40,11 @@ associations <- function(a, b, associate_dfs) {
 
 associate_dfs <- function(
     a,
-    b,
+    b = a,
     progress_bar = FALSE,
     symmetric = identical(a, b)
   ) {
 
-  if (missing(b)) {
-    b <- a
-  }
   if (progress_bar) {
     pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
   }

@@ -89,7 +89,7 @@ setMethod(
 setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "irlba_prcomp"),
-  function(a, b, progress_bar = TRUE, npcs = ncol(b$x), ...) {
+  function(a, b, progress_bar = FALSE, npcs = ncol(b$x), ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
 
@@ -106,7 +106,7 @@ setMethod(
 setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "prcomp"),
-  function(a, b, npcs = ncol(b$x), progress_bar = TRUE, ...) {
+  function(a, b, npcs = ncol(b$x), progress_bar = FALSE, ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
 
