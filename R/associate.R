@@ -1,6 +1,6 @@
 ## S4 method to associate between all types of variables
 #' @export
-associate <- function(a, b, ...) standardGeneric("associate")
+setGeneric("associate", function(a, b, ...) standardGeneric("associate"))
 
 #' @export
 setMethod(
@@ -8,6 +8,24 @@ setMethod(
   signature(a = "numeric", b = "numeric"),
   function(a, b, method = "spearman") {
     stats::cor.test(a, b, method = method, exact = FALSE)[["p.value"]]
+  }
+)
+
+#' @export
+setMethod(
+  "associate",
+  signature(a = "factor", b = "numeric"),
+  function(a, b) {
+    stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
+  }
+)
+
+#' @export
+setMethod(
+  "associate",
+  signature(a = "factor", b = "factor"),
+  function(a, b) {
+    stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
   }
 )
 
@@ -41,27 +59,18 @@ setMethod(
 #' @export
 setMethod(
   "associate",
-  signature(a = "factor", b = "numeric"),
-  function(a, b) {
-    stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
-  }
-)
-
-#' @export
-setMethod(
-  "associate",
-  signature(a = "factor", b = "numeric"),
-  function(a, b) {
-    stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
-  }
-)
-
-#' @export
-setMethod(
-  "associate",
   signature(a = "logical", b = "numeric"),
   function(a, b) {
-    associate(factor(a, b))
+    associate(factor(a), b)
+  }
+)
+
+#' @export
+setMethod(
+  "associate",
+  signature(a = "numeric", b = "logical"),
+  function(a, b) {
+    associate(b, a)
   }
 )
 
@@ -70,7 +79,6 @@ association_plot <- function(a, b, progress_bar = FALSE, ...) {
   pvals <- associate_dfs(a, b, progress_bar = progress_bar)
   pvalue_heatmap(pvals, ...)
 }
-
 
 #' @export
 association_table <- function(a, b, progress_bar = FALSE) {

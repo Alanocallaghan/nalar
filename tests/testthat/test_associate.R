@@ -17,3 +17,14 @@ test_that("association_plot works", {
   g <- association_plot(mtcars)
   expect_is(g, "gg")
 })
+
+test_that("pcaassociation_plot works", {
+  g <- pca_association_plot(mtcars, prcomp(mtcars))
+  expect_is(g, "gg")
+})
+
+
+test_that("inscrutable s4 error from logical input", {
+  mtcars$vs <- as.logical(mtcars$vs)
+  expect_error(associate_dfs(mtcars), NA)
+})

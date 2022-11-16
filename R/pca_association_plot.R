@@ -1,5 +1,5 @@
 #' @export
-pca_association_plot <- function(a, b, ...) standardGeneric("pca_association_plot")
+setGeneric("pca_association_plot", function(a, b, ...) standardGeneric("pca_association_plot"))
 #' @export
 setMethod(
   "pca_association_plot",

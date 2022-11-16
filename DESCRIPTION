@@ -1,6 +1,6 @@
 Package: nalar
 Title: Various things I want it to do
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person(given = "Alan",
            family = "O'Callaghan",
@@ -11,6 +11,7 @@ Depends: R (>= 3.5)
 Imports: 
     reshape2,
     ggplot2,
+    scales,
     viridis,
     progress,
     methods,
