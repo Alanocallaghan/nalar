@@ -20,6 +20,14 @@ setMethod(
     stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
+#' @export
+setMethod(
+  "associate",
+  signature(a = "numeric", b = "factor"),
+  function(a, b) {
+    stats::anova(stats::lm(a ~ b))[["Pr(>F)"]][[1]]
+  }
+)
 
 #' @export
 setMethod(
@@ -43,9 +51,18 @@ setMethod(
 #' @export
 setMethod(
   "associate",
+  signature(a = "character", b = "character"),
+  function(a, b) {
+    associate(factor(a), factor(b))
+  }
+)
+
+#' @export
+setMethod(
+  "associate",
   signature(a = "ANY", b = "character"),
   function(a, b) {
-    associate(a, factor(b))
+    associate(factor(b), a)
   }
 )
 
@@ -61,7 +78,7 @@ setMethod(
 #' @export
 setMethod(
   "associate",
-  signature(a = "logical", b = "numeric"),
+  signature(a = "logical", b = "ANY"),
   function(a, b) {
     associate(factor(a), b)
   }
@@ -70,9 +87,9 @@ setMethod(
 #' @export
 setMethod(
   "associate",
-  signature(a = "numeric", b = "logical"),
+  signature(a = "ANY", b = "logical"),
   function(a, b) {
-    associate(b, a)
+    associate(a, factor(b))
   }
 )
 
@@ -117,6 +134,7 @@ associate_dfs <- function(
       function(n) {
         i <- combs[1, n]
         j <- combs[2, n]
+        # cat(i, "vs", j, "\n")
         if (progress_bar) {
           pb$tick()
         }

@@ -91,7 +91,12 @@ add_varexp <- function(heatmap, varexp) {
         varexp
     ) +
     geom_col() +
-    theme(axis.text.x = element_blank()) +
+    theme_bw() +
+    theme(
+      axis.text.x = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    ) +
     scale_y_continuous(labels = scales::percent) +
     labs(x = NULL, y = "% variance explained")
   plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr")
@@ -104,6 +109,7 @@ pvalue_heatmap <- function(pvalues, varexp, ...) {
   ggplot(mdf, aes(x = Var1, y = Var2, fill = value)) + 
     geom_tile() +
     scale_fill_distiller(palette = "YlGnBu", name = "p-value", trans = "log10", limits = c(min(pvalues), 1)) +
+    theme_bw() +
     theme(
       axis.text.x = element_text(hjust = 1, angle = 45),
       axis.title.x = element_blank(),
