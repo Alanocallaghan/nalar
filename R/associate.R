@@ -16,6 +16,7 @@ setMethod(
   "associate",
   signature(a = "factor", b = "numeric"),
   function(a, b) {
+    if (length(unique(a)) == 1) NA
     stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
@@ -25,6 +26,7 @@ setMethod(
   "associate",
   signature(a = "factor", b = "factor"),
   function(a, b) {
+    if (length(unique(a)) == 1 || length(unique(b)) == 1) NA
     stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
   }
 )
