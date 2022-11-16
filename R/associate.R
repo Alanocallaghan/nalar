@@ -1,6 +1,8 @@
 #' Statistical test of association between arbitrary vector types.
 #' @param a,b Vectors of covariates of arbitrary type.
 #' See Details for the specific tests used.
+#' @param method For numeric vs numeric, the correlation method (passed to
+#' \code{\link[stats]{cor.test}})
 #' @param ... Passed to specific methods.
 #' @details
 #' For numeric vs numeric, a correlation test.
@@ -10,6 +12,7 @@
 #' @export
 setGeneric("associate", function(a, b, ...) standardGeneric("associate"))
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -19,6 +22,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -28,6 +32,8 @@ setMethod(
     stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
   }
 )
+
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -37,6 +43,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -46,7 +53,7 @@ setMethod(
     stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
   }
 )
-
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -55,7 +62,27 @@ setMethod(
     associate(factor(a), b)
   }
 )
+#' @rdname associate
+#' @export
+setMethod(
+  "associate",
+  signature(a = "Date", b = "ANY"),
+  function(a, b) {
+    associate(as.numeric(a), b)
+  }
+)
+#' @rdname associate
+#' @export
+setMethod(
+  "associate",
+  signature(a = "ANY", b = "Date"),
+  function(a, b) {
+    associate(a, as.numeric(b))
+  }
+)
 
+
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -65,6 +92,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -74,6 +102,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -83,6 +112,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",
@@ -92,6 +122,7 @@ setMethod(
   }
 )
 
+#' @rdname associate
 #' @export
 setMethod(
   "associate",

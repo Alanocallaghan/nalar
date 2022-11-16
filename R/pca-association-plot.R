@@ -2,12 +2,25 @@
 #' 
 #' @param a A matrix or data.frame-alike of covariates.
 #' @param b A matrix, or the output of \code{\link[stats]{prcomp}}.
+#' @param method The method used to calculate PCs. Can be \code{"irlba"}
+#' for \code{\link[irlba]{prcomp_irlba}} for truncated PCA or
+#' \code{\link[stats]{prcomp}} for standard PCA.
+#' @param center,scale Passed to PCA methods. Should the data be scaled and
+#' centered before performing PCA?
+#' @param npcs The number of PCs to truncate the results to. For large datasets
+#' visualising >50 PCs is unwieldy so setting this to (e.g.) 20 can be very
+#' useful.
+#' @param max_iterations Passed to \code{\link[irlba]{prcomp_irlba}}.
+#' @param progress_bar Show a progress bar when testing associations? Useful
+#' for very large datasets.
 #' @param ... Passed to specific methods.
 #' @return The output of plot_grid.
 #' @export
 setGeneric("pca_association_plot", function(a, b, ...) {
   standardGeneric("pca_association_plot")
 })
+
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
@@ -15,6 +28,7 @@ setMethod(
   function(a, b,
       method = c("irlba", "prcomp"),
       npcs = min(ncol(a) - 1, nrow(a) - 1, 50),
+      center = TRUE,
       scale = TRUE,
       max_iterations = 100000,
       ...) {
@@ -25,11 +39,13 @@ setMethod(
       "irlba" = {
         prcomp_irlba(b,
           n = npcs,
+          center = center,
           scale. = scale,
           maxit = max_iterations)
       },
       "prcomp" = {
         prcomp(b,
+          center. = center,
           scale. = scale
         )
       }
@@ -38,6 +54,7 @@ setMethod(
   }
 )
 
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
@@ -47,6 +64,7 @@ setMethod(
   }
 )
 
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
@@ -56,6 +74,7 @@ setMethod(
   }
 )
 
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
@@ -65,6 +84,7 @@ setMethod(
   }
 )
 
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
@@ -80,6 +100,8 @@ setMethod(
     add_varexp(hm, varexp)
   }
 )
+
+#' @rdname pca_association_plot
 #' @export
 setMethod(
   "pca_association_plot",
