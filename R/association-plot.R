@@ -9,7 +9,7 @@
 #' For information on the tests used, see \code{\link{associate}}.
 #' @rdname association-summaries
 #' @export
-association_plot <- function(a, b, progress_bar = FALSE, ...) {
+association_plot <- function(a, b = a, progress_bar = FALSE, ...) {
   pvals <- associate_dfs(a, b, progress_bar = progress_bar)
   pvalue_heatmap(pvals, ...)
 }
@@ -24,6 +24,7 @@ association_table <- function(a, b = a, progress_bar = FALSE) {
   mdf <- reshape2::melt(pvals)
   colnames(mdf) <- c("Variable 1", "Variable 2", "p-value")
   mdf <- mdf[!is.na(mdf$"p-value"), ]
+  mdf[order(mdf$"p-value"), ]
   mdf
 }
 
