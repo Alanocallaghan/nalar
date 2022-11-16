@@ -140,7 +140,7 @@ pvalue_heatmap <- function(pvalues, varexp, ...) {
   stopifnot(inherits(pvalues, "matrix"))
 
   mdf <- reshape2::melt(pvalues)
-  ggplot(mdf, aes(x = Var1, y = Var2, fill = value)) +
+  ggplot(mdf, aes(x = .data$Var1, y = .data$Var2, fill = .data$value)) +
     geom_tile() +
     scale_fill_distiller(
       palette = "YlGnBu",
