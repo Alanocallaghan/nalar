@@ -1,22 +1,30 @@
+#' Graphical test between principal components and a table of covariates.
+#' 
+#' @param a A matrix or data.frame-alike of covariates.
+#' @param b A matrix, or the output of \code{\link[stats]{prcomp}}.
+#' @param ... Passed to specific methods.
+#' @return The output of plot_grid.
 #' @export
-setGeneric("pca_association_plot", function(a, b, ...) standardGeneric("pca_association_plot"))
+setGeneric("pca_association_plot", function(a, b, ...) {
+  standardGeneric("pca_association_plot")
+})
 #' @export
 setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "matrix"),
-  function(a, b, 
-      method = c("irlba", "prcomp"), 
-      npcs = min(ncol(a) - 1, nrow(a) - 1, 50), 
+  function(a, b,
+      method = c("irlba", "prcomp"),
+      npcs = min(ncol(a) - 1, nrow(a) - 1, 50),
       scale = TRUE,
       max_iterations = 100000,
       ...) {
-    
+
     method <- match.arg(method)
     ## -1 because irlba has to be truncated
     pcs <- switch(method,
       "irlba" = {
-        prcomp_irlba(b, 
-          n = npcs, 
+        prcomp_irlba(b,
+          n = npcs,
           scale. = scale,
           maxit = max_iterations)
       },
@@ -64,8 +72,10 @@ setMethod(
   function(a, b, progress_bar = TRUE, npcs = ncol(b$x), ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
+
     eigs <- (b$sdev^2)[seq_len(npcs)]
     varexp <- eigs / sum(eigs)
+
     hm <- pvalue_heatmap(pvals, ...)
     add_varexp(hm, varexp)
   }
@@ -77,8 +87,10 @@ setMethod(
   function(a, b, npcs = ncol(b$x), progress_bar = TRUE, ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
+
     eigs <- (b$sdev^2)[seq_len(npcs)]
     varexp <- eigs / sum(eigs)
+
     hm <- pvalue_heatmap(pvals, ...)
     add_varexp(hm, varexp)
   }
@@ -106,9 +118,14 @@ pvalue_heatmap <- function(pvalues, varexp, ...) {
   stopifnot(inherits(pvalues, "matrix"))
 
   mdf <- reshape2::melt(pvalues)
-  ggplot(mdf, aes(x = Var1, y = Var2, fill = value)) + 
+  ggplot(mdf, aes(x = Var1, y = Var2, fill = value)) +
     geom_tile() +
-    scale_fill_distiller(palette = "YlGnBu", name = "p-value", trans = "log10", limits = c(min(pvalues), 1)) +
+    scale_fill_distiller(
+      palette = "YlGnBu",
+      name = "p-value",
+      trans = "log10",
+      limits = c(min(pvalues), 1)
+    ) +
     theme_bw() +
     theme(
       axis.text.x = element_text(hjust = 1, angle = 45),

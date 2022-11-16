@@ -1,4 +1,8 @@
-#' @importFrom ggplot2 ggplot geom_tile theme element_blank scale_fill_distiller aes geom_col labs scale_y_continuous
+#' @importFrom ggplot2
+#'  ggplot aes
+#'  geom_tile geom_col
+#'  theme element_blank theme_bw
+#'  labs scale_y_continuous  scale_fill_distiller
 #' @importFrom viridis scale_fill_viridis
 #' @importFrom progress progress_bar
 #' @importFrom stats prcomp

@@ -3,7 +3,7 @@ remove_collinear <- function(x) {
   collinear <- sapply(
     seq_len(ncol(combs)),
     function(i) {
-      print(i)
+      # print(i)
       compare_columns(x[[combs[1, i]]], x[[combs[2, i]]])
     }
   )
@@ -15,8 +15,6 @@ remove_collinear <- function(x) {
   }
 }
 
-
-#' @export
 compare_columns <- function(a, b) {
   a <- to_numeric(a)
   b <- to_numeric(b)
