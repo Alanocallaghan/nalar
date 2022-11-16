@@ -74,7 +74,7 @@ setMethod(
 setMethod(
   "pca_association_plot",
   signature(a = "data.frame", b = "prcomp"),
-  function(a, b, npcs, progress_bar = TRUE, ...) {
+  function(a, b, npcs = ncol(b$x), progress_bar = TRUE, ...) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
     eigs <- (b$sdev^2)[seq_len(npcs)]
@@ -92,6 +92,7 @@ add_varexp <- function(heatmap, varexp) {
     ) +
     geom_col() +
     theme(axis.text.x = element_blank()) +
+    scale_y_continuous(labels = scales::percent) +
     labs(x = NULL, y = "% variance explained")
   plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr")
 }
