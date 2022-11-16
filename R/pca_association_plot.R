@@ -105,6 +105,7 @@ pvalue_heatmap <- function(pvalues, varexp, ...) {
     geom_tile() +
     scale_fill_distiller(palette = "YlGnBu", name = "p-value", trans = "log10", limits = c(min(pvalues), 1)) +
     theme(
+      axis.text.x = element_text(hjust = 1, angle = 45)
       axis.title.x = element_blank(),
       axis.title.y = element_blank()
     )
