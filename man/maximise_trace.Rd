@@ -14,6 +14,6 @@ A matrix with rows permuted such that tr(mat) is maximised.
 }
 \description{
 Maximising the trace of a matrix amounts to maximising the diagonal elements.
-This is useful when comparing clustering methods, or comparing clustering 
+This is useful when comparing clustering methods, or comparing clustering
 results with known ground truth labels.
 }
