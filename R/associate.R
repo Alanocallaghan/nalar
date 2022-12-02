@@ -85,6 +85,44 @@ setMethod(
     }
 )
 
+#' @rdname associate
+#' @export
+setMethod(
+    "associate",
+    signature(a = "ANY", b = "POSIXct"),
+    function(a, b) {
+        associate(a, as.numeric(b))
+    }
+)
+#' @rdname associate
+#' @export
+setMethod(
+    "associate",
+    signature(a = "POSIXct", b = "ANY"),
+    function(a, b) {
+        associate(as.numeric(a), b)
+    }
+)
+
+#' @rdname associate
+#' @export
+setMethod(
+    "associate",
+    signature(a = "ANY", b = "POSIXt"),
+    function(a, b) {
+        associate(a, as.numeric(b))
+    }
+)
+#' @rdname associate
+#' @export
+setMethod(
+    "associate",
+    signature(a = "POSIXt", b = "ANY"),
+    function(a, b) {
+        associate(as.numeric(a), b)
+    }
+)
+
 
 #' @rdname associate
 #' @export

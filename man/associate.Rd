@@ -9,6 +9,10 @@
 \alias{associate,character,ANY-method}
 \alias{associate,Date,ANY-method}
 \alias{associate,ANY,Date-method}
+\alias{associate,ANY,POSIXct-method}
+\alias{associate,POSIXct,ANY-method}
+\alias{associate,ANY,POSIXt-method}
+\alias{associate,POSIXt,ANY-method}
 \alias{associate,character,character-method}
 \alias{associate,ANY,character-method}
 \alias{associate,ANY,factor-method}
@@ -31,6 +35,14 @@ associate(a, b, ...)
 \S4method{associate}{Date,ANY}(a, b)
 
 \S4method{associate}{ANY,Date}(a, b)
+
+\S4method{associate}{ANY,POSIXct}(a, b)
+
+\S4method{associate}{POSIXct,ANY}(a, b)
+
+\S4method{associate}{ANY,POSIXt}(a, b)
+
+\S4method{associate}{POSIXt,ANY}(a, b)
 
 \S4method{associate}{character,character}(a, b)
 

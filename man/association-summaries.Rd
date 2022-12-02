@@ -5,9 +5,9 @@
 \alias{association_table}
 \title{Graphical and tabular summaries of association between one or two tables.}
 \usage{
-association_plot(a, b, progress_bar = FALSE, ...)
+association_plot(a, b = a, progress_bar = FALSE, ...)
 
-association_table(a, b, progress_bar = FALSE)
+association_table(a, b = a, progress_bar = FALSE)
 }
 \arguments{
 \item{a}{A data.frame of covariates.}
