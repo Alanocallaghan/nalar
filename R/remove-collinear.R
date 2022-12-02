@@ -3,20 +3,11 @@ remove_collinear <- function(x) {
     collinear <- sapply(
         seq_len(ncol(combs)),
         function(i) {
-            print(i)
             compare_columns(x[[combs[1, i]]], x[[combs[2, i]]])
         }
     )
-    drop <- combs[2, collinear]
-    if (length(drop)) {
-        x[, -drop]
-    } else {
-        x
-    }
 }
 
-
-#' @export
 compare_columns <- function(a, b) {
     a <- to_numeric(a)
     b <- to_numeric(b)
