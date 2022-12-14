@@ -9,8 +9,8 @@
 #' For information on the tests used, see \code{\link{associate}}.
 #' @rdname association-summaries
 #' @export
-association_plot <- function(a, b = a, progress_bar = FALSE, ...) {
-    pvals <- associate_dfs(a, b, progress_bar = progress_bar)
+association_plot <- function(a, b = a, progress_bar = FALSE, verbose = FALSE, ...) {
+    pvals <- associate_dfs(a, b, progress_bar = progress_bar, verbose = verbose)
     pvalue_heatmap(pvals, ...)
 }
 
@@ -41,6 +41,7 @@ associations <- function(a, b, associate_dfs) {
 
 associate_dfs <- function(a,
                           b = a,
+                          verbose = FALSE,
                           progress_bar = FALSE,
                           symmetric = identical(a, b)) {
     if (progress_bar) {
@@ -53,6 +54,9 @@ associate_dfs <- function(a,
             function(n) {
                 i <- combs[1, n]
                 j <- combs[2, n]
+                if (verbose) {
+                    cat(i, "vs", j, "\n")
+                }
                 if (progress_bar) {
                     pb$tick()
                 }
