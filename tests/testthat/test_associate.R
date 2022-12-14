@@ -34,5 +34,14 @@ test_that("associate doesn't fail with low levels", {
     b <- rep("b", 10)
     c <- rep(1, 10)
     expect_error(associate(a, b), NA)
+    expect_equal(associate(a, b), NA)
     expect_error(associate(a, c), NA)
+    expect_equal(associate(a, c), NA)
+})
+
+test_that("associate with NAs", {
+    x <- c(rep("a", 2), rep("b", 8), rep("c", 10))
+    y <- c(rep("d", 2), rep(NA, 18))
+    expect_error(associate(x, y), NA)
+    expect_equal(associate(x, y), NA)
 })

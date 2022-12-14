@@ -54,6 +54,9 @@ setMethod(
         if (length(unique(a)) == 1 || length(unique(b)) == 1) {
             return(NA)
         }
+        if (all(colSums(table(a, b) != 0) == 1)) {
+            return(NA)
+        }
         stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
     }
 )
