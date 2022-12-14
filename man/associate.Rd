@@ -74,3 +74,14 @@ For numeric vs numeric, a correlation test.
 For factor vs factor, a chisq test.
 For numeric vs factor/character/logical, ANOVA.
 }
+\examples{
+a <- rnorm(100)
+b <- runif(100)
+c <- sample(letters[1:2], 100, replace = TRUE)
+d <- sample(letters[3:5], 100, replace = TRUE)
+associate(a, b)
+associate(b, a)
+associate(b, c)
+associate(b, d)
+associate(c, d)
+}

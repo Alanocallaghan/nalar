@@ -1,16 +1,33 @@
 #' Graphical and tabular summaries of association between one or two tables.
 #' @param a A data.frame of covariates.
 #' @param b An optional data.frame of covariates.
+#' @param n An integer controlling the maximum number of associations shown.
 #' @param progress_bar Show a progress bar when calculating associations?
+#' @param verbose Logical flag that controls whether the indices being tested
+#' are printed at each iteration. Useful mainly for debugging.
 #' @param ... Passed to \code{pvalue_heatmap}.
 #' @return A ggplot or table showing the p-values of association between table
 #' columns.
 #' @details
 #' For information on the tests used, see \code{\link{associate}}.
+#' @examples
+#' mat <- matrix(rnorm(1000), ncol = 10)
+#' association_plot(mat)
+#' ## only the top 5 associations
+#' association_plot(mat, n = 5)
 #' @rdname association-summaries
 #' @export
-association_plot <- function(a, b = a, progress_bar = FALSE, verbose = FALSE, ...) {
+association_plot <- function(
+        a,
+        b = a,
+        n = 30,
+        progress_bar = FALSE,
+        verbose = FALSE,
+        ...
+    ) {
     pvals <- associate_dfs(a, b, progress_bar = progress_bar, verbose = verbose)
+    ind <- rank(apply(pvals, 2, min, na.rm = TRUE)) <= n
+    pvals <- pvals[ind, ind]
     pvalue_heatmap(pvals, ...)
 }
 

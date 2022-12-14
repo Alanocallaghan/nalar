@@ -5,7 +5,7 @@
 \alias{association_table}
 \title{Graphical and tabular summaries of association between one or two tables.}
 \usage{
-association_plot(a, b = a, progress_bar = FALSE, ...)
+association_plot(a, b = a, n = 30, progress_bar = FALSE, verbose = FALSE, ...)
 
 association_table(a, b = a, progress_bar = FALSE)
 }
@@ -14,7 +14,12 @@ association_table(a, b = a, progress_bar = FALSE)
 
 \item{b}{An optional data.frame of covariates.}
 
+\item{n}{An integer controlling the maximum number of associations shown.}
+
 \item{progress_bar}{Show a progress bar when calculating associations?}
+
+\item{verbose}{Logical flag that controls whether the indices being tested
+are printed at each iteration. Useful mainly for debugging.}
 
 \item{...}{Passed to \code{pvalue_heatmap}.}
 }
@@ -27,4 +32,10 @@ Graphical and tabular summaries of association between one or two tables.
 }
 \details{
 For information on the tests used, see \code{\link{associate}}.
+}
+\examples{
+mat <- matrix(rnorm(1000), ncol = 10)
+association_plot(mat)
+## only the top 5 associations
+association_plot(mat, n = 5)
 }

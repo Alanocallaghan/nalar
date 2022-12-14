@@ -7,6 +7,8 @@
 #' \code{\link[stats]{prcomp}} for standard PCA.
 #' @param center,scale Passed to PCA methods. Should the data be scaled and
 #' centered before performing PCA?
+#' @param n The maximum number of variables to be shown in the PCA plot
+#' (the top n are taken based on the minimum association p-value).
 #' @param npcs The number of PCs to truncate the results to. For large datasets
 #' visualising >50 PCs is unwieldy so setting this to (e.g.) 20 can be very
 #' useful.
@@ -14,7 +16,15 @@
 #' @param progress_bar Show a progress bar when testing associations? Useful
 #' for very large datasets.
 #' @param ... Passed to specific methods.
-#' @return The output of plot_grid.
+#' @examples
+#' mat <- matrix(rnorm(1000), ncol = 10)
+#' pc <- prcomp(mat)
+#' pca_association_plot(mat, pc)
+#' ## only the top 5 associations
+#' pca_association_plot(mat, pc, n = 5)
+#' @return The output of plot_grid, a set of plots showing variance explained
+#' and associations between the columns of \code{a} and the principal components
+#' of \code{b}.
 #' @export
 setGeneric("pca_association_plot", function(a, b, ...) {
     standardGeneric("pca_association_plot")
@@ -27,6 +37,7 @@ setMethod(
     signature(a = "data.frame", b = "matrix"),
     function(a, b,
              method = c("irlba", "prcomp"),
+             n = 20,
              npcs = min(ncol(a) - 1, nrow(a) - 1, 50),
              center = TRUE,
              scale = TRUE,
@@ -48,7 +59,7 @@ setMethod(
                     center. = center,
                     scale. = scale
                 )
-                pca_association_plot(a, pcs, npcs = npcs, ...)
+                pca_association_plot(a, pcs, n = n, npcs = npcs, ...)
             }
         )
     }
@@ -84,21 +95,30 @@ setMethod(
     }
 )
 
+.pc_plot_df_prcomp <- function(
+        a, b,
+        npcs = ncol(b$x),
+        n = 20,
+        progress_bar = FALSE,
+        ...
+    ) {
+
+    pcs <- b$x[, seq_len(npcs), drop = FALSE]
+    pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
+    pvals <- pvals[, rank(apply(pvals, 2, min)) <= n, drop = FALSE]
+
+    eigs <- (b$sdev^2)[seq_len(npcs)]
+    varexp <- eigs / sum(eigs)
+    hm <- pvalue_heatmap(t(pvals), ...)
+    add_varexp(hm, varexp)
+}
+
 #' @rdname pca_association_plot
 #' @export
 setMethod(
     "pca_association_plot",
     signature(a = "data.frame", b = "irlba_prcomp"),
-    function(a, b, progress_bar = FALSE, npcs = ncol(b$x), ...) {
-        pcs <- b$x[, seq_len(npcs), drop = FALSE]
-        pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
-
-        eigs <- (b$sdev^2)[seq_len(npcs)]
-        varexp <- eigs / sum(eigs)
-
-        hm <- pvalue_heatmap(pvals, ...)
-        add_varexp(hm, varexp)
-    }
+    .pc_plot_df_prcomp
 )
 
 #' @rdname pca_association_plot
@@ -106,16 +126,7 @@ setMethod(
 setMethod(
     "pca_association_plot",
     signature(a = "data.frame", b = "prcomp"),
-    function(a, b, npcs = ncol(b$x), progress_bar = FALSE, ...) {
-        pcs <- b$x[, seq_len(npcs), drop = FALSE]
-        pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
-
-        eigs <- (b$sdev^2)[seq_len(npcs)]
-        varexp <- eigs / sum(eigs)
-
-        hm <- pvalue_heatmap(pvals, ...)
-        add_varexp(hm, varexp)
-    }
+    .pc_plot_df_prcomp
 )
 
 add_varexp <- function(heatmap, varexp) {
@@ -141,9 +152,22 @@ add_varexp <- function(heatmap, varexp) {
 
 pvalue_heatmap <- function(pvalues, varexp, ...) {
     stopifnot(inherits(pvalues, "matrix"))
+    if (is.null(colnames(pvalues))) {
+        colnames(pvalues) <- paste0("Col", seq_len(ncol(pvalues)))
+    }
+    if (is.null(rownames(pvalues))) {
+        rownames(pvalues) <- paste0("Row", seq_len(nrow(pvalues)))
+    }
 
     mdf <- reshape2::melt(pvalues)
-    ggplot(mdf, aes(x = .data$Var1, y = .data$Var2, fill = .data$value)) +
+    # reshape2 melt seems to coerce Var1 to numeric sometimes
+    if (!is.factor(mdf$Var1)) {
+        mdf$Var1 <- as.character(mdf$Var1)
+    }
+    if (!is.factor(mdf$Var2)) {
+        mdf$Var2 <- as.character(mdf$Var2)
+    }
+    ggplot(mdf, aes(x = .data$Var2, y = .data$Var1, fill = .data$value)) +
         geom_tile() +
         scale_fill_distiller(
             palette = "YlGnBu",
