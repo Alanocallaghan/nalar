@@ -57,7 +57,10 @@ setMethod(
         if (all(colSums(table(a, b) != 0) == 1)) {
             return(NA)
         }
-        stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]]
+        tryCatch(
+            stats::chisq.test(a, b, simulate.p.value = TRUE)[["p.value"]],
+            error = function(...) NA
+        )
     }
 )
 #' @rdname associate
