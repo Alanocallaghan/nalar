@@ -41,7 +41,7 @@ setMethod(
     "associate",
     signature(a = "numeric", b = "factor"),
     function(a, b) {
-        stats::anova(stats::lm(a ~ b))[["Pr(>F)"]][[1]]
+        suppressWarnings(stats::anova(stats::lm(a ~ b))[["Pr(>F)"]][[1]])
     }
 )
 
