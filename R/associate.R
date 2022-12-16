@@ -32,17 +32,19 @@ setMethod(
     }
 )
 
+.do_anova <- function(a, b) {
+    tryCatch(
+        suppressWarnings(stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]),
+        error = function(e) NA
+    )
+}
+
 #' @rdname associate
 #' @export
 setMethod(
     "associate",
     signature(a = "factor", b = "numeric"),
-    function(a, b) {
-        if (length(unique(a)) == 1) {
-            return(NA)
-        }
-        stats::anova(stats::lm(b ~ a))[["Pr(>F)"]][[1]]
-    }
+    .do_anova
 )
 
 #' @rdname associate
@@ -51,7 +53,7 @@ setMethod(
     "associate",
     signature(a = "numeric", b = "factor"),
     function(a, b) {
-        suppressWarnings(stats::anova(stats::lm(a ~ b))[["Pr(>F)"]][[1]])
+        .do_anova(b, a)
     }
 )
 

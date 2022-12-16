@@ -1,6 +1,6 @@
 Package: nalar
 Title: Various things I want it to do
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: 
     person(given = "Alan",
            family = "O'Callaghan",
