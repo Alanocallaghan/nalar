@@ -98,14 +98,14 @@ setMethod(
 .pc_plot_df_prcomp <- function(
         a, b,
         npcs = ncol(b$x),
-        n = 20,
+        ncovariates = 20,
         progress_bar = FALSE,
         ...
     ) {
 
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
-    pvals <- pvals[, rank(apply(pvals, 2, min)) <= n, drop = FALSE]
+    pvals <- pvals[, rank(apply(pvals, 2, min)) <= ncovariates, drop = FALSE]
 
     eigs <- (b$sdev^2)[seq_len(npcs)]
     varexp <- eigs / sum(eigs)

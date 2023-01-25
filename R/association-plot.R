@@ -61,6 +61,7 @@ associate_dfs <- function(
         verbose = FALSE,
         progress_bar = FALSE,
         symmetric = identical(a, b)) {
+
     if (progress_bar) {
         pb <- progress::progress_bar$new(total = ncol(a) * ncol(b))
     }
