@@ -7,9 +7,9 @@ test_that("reflect_matrix works", {
 })
 
 test_that("associate_dfs works", {
-    asymm <- associate_dfs(mtcars, mtcars, symmetric = FALSE)
+    asymm <- .associate_dfs(mtcars, mtcars, symmetric = FALSE)
     diag(asymm) <- NA
-    symm <- associate_dfs(mtcars, mtcars, symmetric = TRUE)
+    symm <- .associate_dfs(mtcars, mtcars, symmetric = TRUE)
     expect_identical(asymm, symm)
 })
 
@@ -26,7 +26,7 @@ test_that("pcaassociation_plot works", {
 
 test_that("inscrutable s4 error from logical input", {
     mtcars$vs <- as.logical(mtcars$vs)
-    expect_error(associate_dfs(mtcars), NA)
+    expect_error(.associate_dfs(mtcars), NA)
 })
 
 test_that("associate doesn't fail with low levels", {
