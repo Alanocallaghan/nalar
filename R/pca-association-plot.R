@@ -102,13 +102,22 @@ setMethod(
         progress_bar = FALSE,
         ...
     ) {
-
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
     pvals <- .associate_dfs(a, pcs, progress_bar = progress_bar)
     pvals <- pvals[, rank(apply(pvals, 2, min)) <= ncovariates, drop = FALSE]
 
+    # calculate variance explained
     eigs <- (b$sdev^2)[seq_len(npcs)]
     varexp <- eigs / sum(eigs)
+
+    # convert PC1 to PC01, accounting for if we only have PC1 to PC9 or
+    # even have PC1 to PC101
+    # this is so lexicographical sort works
+    nzeros <- nchar(as.character(ncol(pvals)))
+    rownames(pvals) <- gsub("PC(\\d+)", "\\1", rownames(pvals))
+    sprintf_string <- paste("PC %0", nzeros, "d")
+    rownames(pvals) <- sprintf(sprintf_string, as.numeric(rownames(pvals)))
+
     hm <- .pvalue_heatmap(t(pvals), ...)
     .add_varexp(hm, varexp)
 }
@@ -173,12 +182,9 @@ setMethod(
 
     mdf <- reshape2::melt(pvalues)
     # reshape2 melt seems to coerce Var1 to numeric sometimes
-    if (!is.factor(mdf$Var1)) {
-        mdf$Var1 <- factor(mdf$Var1)
-    }
-    if (!is.factor(mdf$Var2)) {
-        mdf$Var2 <- factor(mdf$Var2)
-    }
+    mdf$Var1 <- factor(mdf$Var1, levels = sort(unique(as.character(mdf$Var1))))
+    mdf$Var2 <- factor(mdf$Var2, levels = sort(unique(as.character(mdf$Var2))))
+
     ggplot(mdf, aes(x = .data$Var2, y = .data$Var1, fill = .data$value)) +
         geom_tile(colour = "grey80") +
         scale_y_discrete(expand = c(0, 0)) +
