@@ -5,7 +5,7 @@
 #' @param progress_bar Show a progress bar when calculating associations?
 #' @param verbose Logical flag that controls whether the indices being tested
 #' are printed at each iteration. Useful mainly for debugging.
-#' @param ... Passed to \code{pvalue_heatmap}.
+#' @param ... Passed to internal functions.
 #' @return A ggplot or table showing the p-values of association between table
 #' columns.
 #' @details
@@ -25,16 +25,16 @@ association_plot <- function(
         verbose = FALSE,
         ...
     ) {
-    pvals <- associate_dfs(a, b, progress_bar = progress_bar, verbose = verbose)
+    pvals <- .associate_dfs(a, b, progress_bar = progress_bar, verbose = verbose)
     ind <- rank(apply(pvals, 2, min, na.rm = TRUE)) <= n
     pvals <- pvals[ind, ind]
-    pvalue_heatmap(pvals, ...)
+    .pvalue_heatmap(pvals, ...)
 }
 
 #' @rdname association-summaries
 #' @export
 association_table <- function(a, b = a, progress_bar = FALSE) {
-    pvals <- associate_dfs(a, b, progress_bar = progress_bar)
+    pvals <- .associate_dfs(a, b, progress_bar = progress_bar)
     if (missing(b)) {
         pvals[lower.tri(pvals)] <- NA
     }
@@ -55,7 +55,7 @@ associations <- function(a, b, associate_dfs) {
     )
 }
 
-associate_dfs <- function(
+.associate_dfs <- function(
         a,
         b = a,
         verbose = FALSE,

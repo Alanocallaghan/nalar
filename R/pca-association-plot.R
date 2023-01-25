@@ -104,13 +104,13 @@ setMethod(
     ) {
 
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
-    pvals <- associate_dfs(a, pcs, progress_bar = progress_bar)
+    pvals <- .associate_dfs(a, pcs, progress_bar = progress_bar)
     pvals <- pvals[, rank(apply(pvals, 2, min)) <= ncovariates, drop = FALSE]
 
     eigs <- (b$sdev^2)[seq_len(npcs)]
     varexp <- eigs / sum(eigs)
-    hm <- pvalue_heatmap(t(pvals), ...)
-    add_varexp(hm, varexp)
+    hm <- .pvalue_heatmap(t(pvals), ...)
+    .add_varexp(hm, varexp)
 }
 
 #' @rdname pca_association_plot
@@ -129,7 +129,7 @@ setMethod(
     .pc_plot_df_prcomp
 )
 
-add_varexp <- function(heatmap, varexp) {
+.add_varexp <- function(heatmap, varexp) {
     barplot <- ggplot() +
         aes(
             factor(
@@ -158,7 +158,7 @@ add_varexp <- function(heatmap, varexp) {
     plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr")
 }
 
-pvalue_heatmap <- function(pvalues, varexp, min_pvalue = NULL, ...) {
+.pvalue_heatmap <- function(pvalues, varexp, min_pvalue = NULL, ...) {
     stopifnot(inherits(pvalues, "matrix"))
     if (!is.null(min_pvalue)) {
         stopifnot(min_pvalue > 0 && min_pvalue < 1)
