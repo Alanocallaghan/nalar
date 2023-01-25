@@ -25,7 +25,6 @@ association_table <- function(a, b = a, progress_bar = FALSE) {
   colnames(mdf) <- c("Variable 1", "Variable 2", "p-value")
   mdf <- mdf[!is.na(mdf$"p-value"), ]
   mdf[order(mdf$"p-value"), ]
-  mdf
 }
 
 ## todo: plot and table methods
