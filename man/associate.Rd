@@ -9,6 +9,10 @@
 \alias{associate,character,ANY-method}
 \alias{associate,Date,ANY-method}
 \alias{associate,ANY,Date-method}
+\alias{associate,ANY,POSIXct-method}
+\alias{associate,POSIXct,ANY-method}
+\alias{associate,ANY,POSIXt-method}
+\alias{associate,POSIXt,ANY-method}
 \alias{associate,character,character-method}
 \alias{associate,ANY,character-method}
 \alias{associate,ANY,factor-method}
@@ -31,6 +35,14 @@ associate(a, b, ...)
 \S4method{associate}{Date,ANY}(a, b)
 
 \S4method{associate}{ANY,Date}(a, b)
+
+\S4method{associate}{ANY,POSIXct}(a, b)
+
+\S4method{associate}{POSIXct,ANY}(a, b)
+
+\S4method{associate}{ANY,POSIXt}(a, b)
+
+\S4method{associate}{POSIXt,ANY}(a, b)
 
 \S4method{associate}{character,character}(a, b)
 
@@ -61,4 +73,15 @@ Statistical test of association between arbitrary vector types.
 For numeric vs numeric, a correlation test.
 For factor vs factor, a chisq test.
 For numeric vs factor/character/logical, ANOVA.
+}
+\examples{
+a <- rnorm(100)
+b <- runif(100)
+c <- sample(letters[1:2], 100, replace = TRUE)
+d <- sample(letters[3:5], 100, replace = TRUE)
+associate(a, b)
+associate(b, a)
+associate(b, c)
+associate(b, d)
+associate(c, d)
 }

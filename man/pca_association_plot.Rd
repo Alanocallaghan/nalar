@@ -16,6 +16,7 @@ pca_association_plot(a, b, ...)
   a,
   b,
   method = c("irlba", "prcomp"),
+  n = 20,
   npcs = min(ncol(a) - 1, nrow(a) - 1, 50),
   center = TRUE,
   scale = TRUE,
@@ -29,9 +30,9 @@ pca_association_plot(a, b, ...)
 
 \S4method{pca_association_plot}{ANY,data.frame}(a, b, ...)
 
-\S4method{pca_association_plot}{data.frame,irlba_prcomp}(a, b, progress_bar = TRUE, npcs = ncol(b$x), ...)
+\S4method{pca_association_plot}{data.frame,irlba_prcomp}(a, b, npcs = ncol(b$x), n = 20, progress_bar = FALSE, ...)
 
-\S4method{pca_association_plot}{data.frame,prcomp}(a, b, npcs = ncol(b$x), progress_bar = TRUE, ...)
+\S4method{pca_association_plot}{data.frame,prcomp}(a, b, npcs = ncol(b$x), n = 20, progress_bar = FALSE, ...)
 }
 \arguments{
 \item{a}{A matrix or data.frame-alike of covariates.}
@@ -43,6 +44,9 @@ pca_association_plot(a, b, ...)
 \item{method}{The method used to calculate PCs. Can be \code{"irlba"}
 for \code{\link[irlba]{prcomp_irlba}} for truncated PCA or
 \code{\link[stats]{prcomp}} for standard PCA.}
+
+\item{n}{The maximum number of variables to be shown in the PCA plot
+(the top n are taken based on the minimum association p-value).}
 
 \item{npcs}{The number of PCs to truncate the results to. For large datasets
 visualising >50 PCs is unwieldy so setting this to (e.g.) 20 can be very
@@ -57,8 +61,17 @@ centered before performing PCA?}
 for very large datasets.}
 }
 \value{
-The output of plot_grid.
+The output of plot_grid, a set of plots showing variance explained
+and associations between the columns of \code{a} and the principal components
+of \code{b}.
 }
 \description{
 Graphical test between principal components and a table of covariates.
+}
+\examples{
+mat <- matrix(rnorm(1000), ncol = 10)
+pc <- prcomp(mat)
+pca_association_plot(mat, pc)
+## only the top 5 associations
+pca_association_plot(mat, pc, n = 5)
 }
