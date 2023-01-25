@@ -158,8 +158,12 @@ add_varexp <- function(heatmap, varexp) {
     plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr")
 }
 
-pvalue_heatmap <- function(pvalues, varexp, ...) {
+pvalue_heatmap <- function(pvalues, varexp, min = NULL, ...) {
     stopifnot(inherits(pvalues, "matrix"))
+    if (!is.null(min)) {
+        stopifnot(min > 0 && min < 1)
+        pvalues[pvalues < min] <- min
+    }
     if (is.null(colnames(pvalues))) {
         colnames(pvalues) <- paste0("Col", seq_len(ncol(pvalues)))
     }
