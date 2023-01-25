@@ -174,10 +174,10 @@ pvalue_heatmap <- function(pvalues, varexp, min_pvalue = NULL, ...) {
     mdf <- reshape2::melt(pvalues)
     # reshape2 melt seems to coerce Var1 to numeric sometimes
     if (!is.factor(mdf$Var1)) {
-        mdf$Var1 <- as.character(mdf$Var1)
+        mdf$Var1 <- factor(mdf$Var1)
     }
     if (!is.factor(mdf$Var2)) {
-        mdf$Var2 <- as.character(mdf$Var2)
+        mdf$Var2 <- factor(mdf$Var2)
     }
     ggplot(mdf, aes(x = .data$Var2, y = .data$Var1, fill = .data$value)) +
         geom_tile(colour = "grey80") +
