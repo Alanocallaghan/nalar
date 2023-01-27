@@ -115,7 +115,7 @@ setMethod(
     # this is so lexicographical sort works
     nzeros <- nchar(as.character(ncol(pvals)))
     rownames(pvals) <- gsub("PC(\\d+)", "\\1", rownames(pvals))
-    sprintf_string <- paste("PC %0", nzeros, "d")
+    sprintf_string <- paste0("PC %0", nzeros, "d")
     rownames(pvals) <- sprintf(sprintf_string, as.numeric(rownames(pvals)))
 
     hm <- .pvalue_heatmap(t(pvals), ...)

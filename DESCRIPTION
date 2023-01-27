@@ -1,6 +1,6 @@
 Package: nalar
 Title: Various things I want it to do
-Version: 0.1.8
+Version: 0.1.10
 Date: 2022-01-25
 Authors@R: 
     person(given = "Alan",
