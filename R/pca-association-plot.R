@@ -187,7 +187,6 @@ setMethod(
 
     ggplot(mdf, aes(x = .data$Var2, y = .data$Var1, fill = .data$value)) +
         geom_tile(colour = "grey80") +
-        scale_y_discrete(expand = c(0, 0)) +
         scale_fill_distiller(
             palette = "YlGnBu",
             name = "p-value",
