@@ -5,7 +5,15 @@
 \alias{association_table}
 \title{Graphical and tabular summaries of association between one or two tables.}
 \usage{
-association_plot(a, b = a, n = 30, progress_bar = FALSE, verbose = FALSE, ...)
+association_plot(
+  a,
+  b = a,
+  n = 30,
+  progress_bar = FALSE,
+  verbose = FALSE,
+  max_na = 0.9,
+  ...
+)
 
 association_table(a, b = a, progress_bar = FALSE)
 }
@@ -21,7 +29,10 @@ association_table(a, b = a, progress_bar = FALSE)
 \item{verbose}{Logical flag that controls whether the indices being tested
 are printed at each iteration. Useful mainly for debugging.}
 
-\item{...}{Passed to \code{pvalue_heatmap}.}
+\item{max_na}{The maximum proportion of missing values in a row/column before
+it is removed from the plot.}
+
+\item{...}{Passed to internal functions.}
 }
 \value{
 A ggplot or table showing the p-values of association between table

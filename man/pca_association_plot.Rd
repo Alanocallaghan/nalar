@@ -30,9 +30,23 @@ pca_association_plot(a, b, ...)
 
 \S4method{pca_association_plot}{ANY,data.frame}(a, b, ...)
 
-\S4method{pca_association_plot}{data.frame,irlba_prcomp}(a, b, npcs = ncol(b$x), n = 20, progress_bar = FALSE, ...)
+\S4method{pca_association_plot}{data.frame,irlba_prcomp}(
+  a,
+  b,
+  npcs = ncol(b$x),
+  ncovariates = 20,
+  progress_bar = FALSE,
+  ...
+)
 
-\S4method{pca_association_plot}{data.frame,prcomp}(a, b, npcs = ncol(b$x), n = 20, progress_bar = FALSE, ...)
+\S4method{pca_association_plot}{data.frame,prcomp}(
+  a,
+  b,
+  npcs = ncol(b$x),
+  ncovariates = 20,
+  progress_bar = FALSE,
+  ...
+)
 }
 \arguments{
 \item{a}{A matrix or data.frame-alike of covariates.}

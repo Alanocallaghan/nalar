@@ -3,6 +3,8 @@
 #' @param b An optional data.frame of covariates.
 #' @param n An integer controlling the maximum number of associations shown.
 #' @param progress_bar Show a progress bar when calculating associations?
+#' @param max_na The maximum proportion of missing values in a row/column before
+#' it is removed from the plot.
 #' @param verbose Logical flag that controls whether the indices being tested
 #' are printed at each iteration. Useful mainly for debugging.
 #' @param ... Passed to internal functions.
@@ -23,9 +25,11 @@ association_plot <- function(
         n = 30,
         progress_bar = FALSE,
         verbose = FALSE,
+        max_na = 0.9,
         ...
     ) {
     pvals <- .associate_dfs(a, b, progress_bar = progress_bar, verbose = verbose)
+    pvals <- pvals[apply(pvals, 1, fx <- function(x) mean(is.na(x)) < max_na), apply(pvals, 2, fx)]
     ind <- rank(apply(pvals, 2, min, na.rm = TRUE)) <= n
     pvals <- pvals[ind, ind]
     .pvalue_heatmap(pvals, ...)
