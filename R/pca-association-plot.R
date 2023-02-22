@@ -13,6 +13,8 @@
 #' visualising >50 PCs is unwieldy so setting this to (e.g.) 20 can be very
 #' useful.
 #' @param max_iterations Passed to \code{\link[irlba]{prcomp_irlba}}.
+#' @param vars_keep,vars_ignore Vectors of variables to keep or remove from the
+#' plot, regardless of p-value filtering.
 #' @param progress_bar Show a progress bar when testing associations? Useful
 #' for very large datasets.
 #' @param ... Passed to specific methods.
@@ -42,6 +44,8 @@ setMethod(
              center = TRUE,
              scale = TRUE,
              max_iterations = 100000,
+             vars_keep = NULL,
+             vars_ignore = NULL,
              ...) {
         method <- match.arg(method)
         ## -1 because irlba has to be truncated
@@ -59,7 +63,7 @@ setMethod(
                     center. = center,
                     scale. = scale
                 )
-                pca_association_plot(a, pcs, n = n, npcs = npcs, ...)
+                pca_association_plot(a, pcs, n = n, npcs = npcs, vars_keep = vars_keep, vars_ignore = vars_ignore, ...)
             }
         )
     }
@@ -99,12 +103,24 @@ setMethod(
         a, b,
         npcs = ncol(b$x),
         ncovariates = 20,
+        vars_keep = NULL,
+        vars_ignore = NULL,
         progress_bar = FALSE,
         ...
     ) {
     pcs <- b$x[, seq_len(npcs), drop = FALSE]
+    a <- a[, setdiff(colnames(a), vars_ignore)]
     pvals <- .associate_dfs(a, pcs, progress_bar = progress_bar)
-    pvals <- pvals[, rank(apply(pvals, 2, min)) <= ncovariates, drop = FALSE]
+
+    ## drop cols that are all NA    
+    ind_all_na <- apply(pvals, 2, function(x) all(!is.finite(x)))
+    pvals <- pvals[, !ind_all_na]
+
+    ## keep only the top ncovariates based on min pvals
+    min_pval <- apply(pvals, 2, min)
+    ind_drop <- rank(min_pval) <= ncovariates
+    name_drop <- setdiff(colnames(pvals)[ind_drop], vars_keep)
+    pvals <- pvals[, name_drop, drop = FALSE]
 
     # calculate variance explained
     eigs <- (b$sdev^2)[seq_len(npcs)]
@@ -152,7 +168,7 @@ setMethod(
             name = NULL
         ) +
         scale_y_continuous(
-            name = "% variance explained",
+            name = "% of variance",
             labels = scales::percent,
             expand = c(0.0, 0, 0.05, 0)
         ) +
@@ -164,7 +180,7 @@ setMethod(
             panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank()
         )
-    plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr")
+    plot_grid(barplot, heatmap, align = "v", ncol = 1, axis = "tblr", rel_heights = c(0.2, 0.8))
 }
 
 .pvalue_heatmap <- function(pvalues, varexp, min_pvalue = NULL, ...) {

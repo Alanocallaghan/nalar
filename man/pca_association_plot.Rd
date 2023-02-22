@@ -21,6 +21,8 @@ pca_association_plot(a, b, ...)
   center = TRUE,
   scale = TRUE,
   max_iterations = 1e+05,
+  vars_keep = NULL,
+  vars_ignore = NULL,
   ...
 )
 
@@ -35,6 +37,8 @@ pca_association_plot(a, b, ...)
   b,
   npcs = ncol(b$x),
   ncovariates = 20,
+  vars_keep = NULL,
+  vars_ignore = NULL,
   progress_bar = FALSE,
   ...
 )
@@ -44,6 +48,8 @@ pca_association_plot(a, b, ...)
   b,
   npcs = ncol(b$x),
   ncovariates = 20,
+  vars_keep = NULL,
+  vars_ignore = NULL,
   progress_bar = FALSE,
   ...
 )
@@ -70,6 +76,9 @@ useful.}
 centered before performing PCA?}
 
 \item{max_iterations}{Passed to \code{\link[irlba]{prcomp_irlba}}.}
+
+\item{vars_keep, vars_ignore}{Vectors of variables to keep or remove from the
+plot, regardless of p-value filtering.}
 
 \item{progress_bar}{Show a progress bar when testing associations? Useful
 for very large datasets.}
