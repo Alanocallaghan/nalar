@@ -123,8 +123,9 @@ setMethod(
     pvals <- pvals[, name_drop, drop = FALSE]
 
     # calculate variance explained
-    eigs <- (b$sdev^2)[seq_len(npcs)]
+    eigs <- (b$sdev^2)
     varexp <- eigs / sum(eigs)
+    varexp <- varexp[seq_len(npcs)]
 
     # convert PC1 to PC01, accounting for if we only have PC1 to PC9 or
     # even have PC1 to PC101
